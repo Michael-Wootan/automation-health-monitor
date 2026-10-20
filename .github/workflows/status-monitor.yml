@@ -1,0 +1,40 @@
+name: Daily Status Monitor
+
+on:
+  schedule:
+    - cron: '0 22 * * *'   # daily, 22:00 UTC
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No lockfile is committed yet; switch to `npm ci` (and add cache: 'npm') once one is.
+      - run: npm install --omit=dev
+
+      # The config is committed as monitor.config.json in your deployment repo
+      # (remove it from .gitignore there), or supplied via MONITOR_CONFIG.
+      # This repo ships only the example.
+      - name: Run status monitor and email report
+        run: node src/status-monitor.js
+        env:
+          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+          EXTRA_REPOS_TOKEN: ${{ secrets.EXTRA_REPOS_TOKEN }}
+          MONITOR_CONFIG:    ${{ vars.MONITOR_CONFIG || 'monitor.config.json' }}
+          STORE_NAME:        ${{ vars.STORE_NAME }}
+          SMTP_HOST:         ${{ secrets.SMTP_HOST }}
+          SMTP_PORT:         ${{ secrets.SMTP_PORT }}
+          SMTP_USER:         ${{ secrets.SMTP_USER }}
+          SMTP_PASS:         ${{ secrets.SMTP_PASS }}
+          EMAIL_FROM:        ${{ secrets.EMAIL_FROM }}
+          EMAIL_NOTIFY:      ${{ secrets.EMAIL_NOTIFY }}

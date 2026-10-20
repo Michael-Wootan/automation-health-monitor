@@ -1,0 +1,15 @@
+{
+  "name": "automation-health-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daily health report for a suite of GitHub Actions automations: reads run status and logs via the Actions API, parses what each job did, and emails one HTML summary.",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "report": "node src/status-monitor.js",
+    "report:dry": "node src/status-monitor.js --no-email"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.14"
+  }
+}

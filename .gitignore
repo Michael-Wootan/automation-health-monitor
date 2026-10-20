@@ -1,0 +1,8 @@
+node_modules/
+.env
+.env.*
+!.env.example
+credentials*.json
+monitor.config.json
+reports/
+.DS_Store

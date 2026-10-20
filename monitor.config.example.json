@@ -1,0 +1,106 @@
+{
+  "storeName": "Acme Store",
+  "primaryRepo": "your-org/store-automations",
+
+  "groups": [
+    { "id": "operations", "label": "📦 ORDERS & OPERATIONS" },
+    { "id": "content",    "label": "📝 CONTENT & BLOG" },
+    { "id": "seo",        "label": "🔍 SEARCH & INDEXING" },
+    { "id": "marketing",  "label": "📬 EMAIL MARKETING" },
+    { "id": "reports",    "label": "📊 REPORTS" },
+    { "id": "support",    "label": "🤖 CUSTOMER SUPPORT" }
+  ],
+
+  "workflows": {
+    "order-sync.yml": {
+      "name": "📦 Order Sync",
+      "group": "operations",
+      "frequency": "daily",
+      "schedule": "Every 2 hours",
+      "description": "Forwards new paid orders to the fulfillment partner and writes tracking numbers back to the store."
+    },
+    "blog-publish.yml": {
+      "name": "📝 Blog Pipeline",
+      "group": "content",
+      "frequency": "daily",
+      "schedule": "Daily @ 9:00 AM",
+      "description": "Writes and publishes one new blog post each morning.",
+      "extract": "blogSummary"
+    },
+    "gsc-monitor.yml": {
+      "name": "🔍 Search Console Not-Indexed Monitor",
+      "group": "seo",
+      "frequency": "daily",
+      "schedule": "Daily @ 10:00 AM",
+      "description": "Checks Search Console for pages Google has not indexed.",
+      "extract": "gscNotIndexed"
+    },
+    "gsc-indexing.yml": {
+      "name": "📤 Indexing Submission",
+      "group": "seo",
+      "frequency": "daily",
+      "schedule": "Daily @ 11:00 AM",
+      "description": "Submits new and not-yet-indexed pages to Google.",
+      "extract": "gscIndexing"
+    },
+    "contact-sync.yml": {
+      "name": "📬 Contact Sync → MailerLite",
+      "group": "marketing",
+      "frequency": "weekly",
+      "schedule": "Weekly — Monday",
+      "description": "Collects opted-in customers and leads, emails an approval summary, then uploads them.",
+      "extract": "contactSync"
+    },
+    "email-campaigns.yml": {
+      "name": "📧 Email Campaigns",
+      "group": "marketing",
+      "frequency": "weekly",
+      "timing": "SCHEDULED",
+      "schedule": "As scheduled",
+      "description": "Sends scheduled campaigns to the newsletter list."
+    },
+    "weekly-report.yml": {
+      "name": "📊 Weekly Business Report",
+      "group": "reports",
+      "frequency": "weekly",
+      "schedule": "Weekly — Monday @ 8:00 AM",
+      "description": "Sales, traffic and automation summary for the week."
+    },
+    "catalog-cleanup.yml": {
+      "name": "🧹 Catalog Cleanup",
+      "oneoff": true,
+      "schedule": "Manual — run when needed",
+      "description": "Manual (workflow_dispatch) tool for bulk product listing fixes."
+    },
+    "status-monitor.yml": { "skip": true }
+  },
+
+  "extraRepos": [
+    {
+      "repo": "your-org/support-bot",
+      "group": "support",
+      "icon": "🤖",
+      "workflows": {
+        "email-triage.yml": {
+          "name": "📧 Support Email Triage",
+          "frequency": "daily",
+          "schedule": "Every ~20 minutes",
+          "description": "Answers order-status and FAQ emails, escalates everything else."
+        },
+        "deploy.yml": {
+          "name": "🚀 Support Bot Deploy",
+          "frequency": "weekly",
+          "schedule": "On push to main",
+          "description": "Deploys the chat widget and knowledge base."
+        },
+        "replay-eval.yml": {
+          "name": "🧪 Replay Eval",
+          "frequency": "monthly",
+          "oneoff": true,
+          "schedule": "Manual",
+          "description": "Runs a test corpus through the classifier with zero sends."
+        }
+      }
+    }
+  ]
+}
